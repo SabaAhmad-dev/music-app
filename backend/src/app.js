@@ -12,9 +12,9 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
-app.use("/",(req,res){
+app.use("/",(req,res)=>{
   res.json({
-    hello
+   " hello"
   })
 })
 app.use("/api/auth",authRouter)

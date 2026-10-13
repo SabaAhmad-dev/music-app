@@ -14,7 +14,7 @@ app.use(cookieParser());
 
 app.use("/",(req,res)=>{
   res.json({
-   " hello"
+   message:" hello"
   })
 })
 app.use("/api/auth",authRouter)

@@ -26,4 +26,20 @@ router.get("/", authMiddleware.authUser, musicController.getAllMusics);
 router.get("/albums", authMiddleware.authUser, musicController.getAllAlbums);
 router.delete("/:id", authMiddleware.authArtist, musicController.deleteMusic);
 
+
+
+
+router.get("/key-check", authMiddleware.authArtist, (req, res) => {
+  const k = process.env.IMAGEKIT_PRIVATE_KEY || "";
+  res.json({ length: k.length, start: k.slice(0, 8), last4: k.slice(-4) });
+});
+
+
+
+
+
+
+
+
+
 module.exports = router;

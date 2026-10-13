@@ -12,6 +12,11 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
+app.use("/",(req,res){
+  res.json({
+    hello
+  })
+})
 app.use("/api/auth",authRouter)
 app.use("/api/music",musicRouter)
 

@@ -20,5 +20,7 @@ async function deleteFile(fileId) {
 function getAuthParams() {
   return ImageKitClient.helper.getAuthenticationParameters();
 }
-
-module.exports = { uploadFile, deleteFile, getAuthParams };
+async function getFileDetails(fileId) {
+  return await ImageKitClient.files.get(fileId);
+}
+module.exports = { uploadFile, deleteFile, getAuthParams, getFileDetails };

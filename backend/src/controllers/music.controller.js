@@ -1,25 +1,28 @@
 const albumModel = require("../models/album.model.js");
 const musicModel = require("../models/music.model.js");
-const { uploadFile, deleteFile } = require("../services/storage.service.js");
-
+const { deleteFile, getFileDetails } = require("../services/storage.service.js");
 async function createMusic(req, res) {
   try {
-    const { title } = req.body;
-    const file = req.file;
+    const { title, fileId } = req.body;
 
     if (!title) {
       return res.status(400).json({ message: "title is required" });
     }
 
-    if (!file) {
-      return res.status(400).json({ message: "music file is required" });
+    if (!fileId) {
+      return res.status(400).json({ message: "fileId is required" });
     }
 
-    const result = await uploadFile(file.buffer.toString("base64"));
+    // ImageKit se pakka karo ke file asli hai aur hamare music folder mein hai
+    const details = await getFileDetails(fileId);
+
+    if (!details || !details.filePath || !details.filePath.startsWith("/backend/music/")) {
+      return res.status(400).json({ message: "invalid file" });
+    }
 
     const music = await musicModel.create({
-      uri: result.url,
-      fileId: result.fileId,
+      uri: details.url,
+      fileId: details.fileId,
       title,
       artist: req.user.id,
     });

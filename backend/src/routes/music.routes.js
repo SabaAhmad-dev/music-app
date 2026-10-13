@@ -1,16 +1,14 @@
 const express = require("express");
 const musicController = require("../controllers/music.controller.js");
-const multer = require("multer");
+
 const authMiddleware = require("../middlewares/auth.middleware.js");
 const storageService = require("../services/storage.service.js");
 
-const upload = multer({
-  storage: multer.memoryStorage(),
-});
+
 
 const router = express.Router();
 
-router.post("/upload", authMiddleware.authArtist, upload.single("music"), musicController.createMusic);
+router.post("/upload", authMiddleware.authArtist, musicController.createMusic);
 
 router.get("/imagekit-auth", authMiddleware.authArtist, (req, res) => {
   try {

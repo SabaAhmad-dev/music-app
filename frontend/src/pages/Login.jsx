@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api";
+import { Link } from "react-router-dom";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -37,6 +38,9 @@ function Login() {
       />
       <button type="submit">Login</button>
       {error && <p>{error}</p>}
+         <p className="auth-switch">
+     Don't have an account? <Link to="/register">Register</Link>
+   </p>
     </form>
   );
 }

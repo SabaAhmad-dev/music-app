@@ -296,3 +296,11 @@ form p a:hover {
   background: var(--danger);
   color: #fff;
 }
+
+
+   .auth-switch {
+     color: #9ca3af;
+   }
+   .auth-switch a {
+     color: #4fc3f7;
+   }

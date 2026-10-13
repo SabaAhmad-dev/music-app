@@ -1,0 +1,298 @@
+:root {
+  --bg: #0b0b10;
+  --surface: #14141c;
+  --surface-2: #1c1c27;
+  --border: #272735;
+  --text: #f4f4f8;
+  --muted: #8f8fa6;
+  --accent: #7c5cff;
+  --accent-2: #4fd1ff;
+  --accent-hover: #6a49f0;
+  --danger: #ff5c7a;
+  --radius: 14px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+#root {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 20px 48px;
+}
+
+/* ---------- Navbar ---------- */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 0;
+  margin-bottom: 28px;
+  background: rgba(11, 11, 16, 0.85);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+.brand {
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin-right: 18px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+nav a {
+  color: var(--muted);
+  text-decoration: none;
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: 8px;
+  transition: 0.2s;
+}
+nav a:hover {
+  color: var(--text);
+  background: var(--surface);
+}
+nav a.active {
+  color: var(--text);
+  background: var(--surface-2);
+}
+nav button {
+  margin-left: auto;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 8px 16px;
+}
+nav button:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+  background: transparent;
+}
+
+/* ---------- Headings ---------- */
+h2 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.subtitle {
+  color: var(--muted);
+  margin-bottom: 24px;
+}
+
+/* ---------- Forms (Login / Register / Upload) ---------- */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 32px;
+  border-radius: var(--radius);
+  max-width: 420px;
+  margin: 56px auto;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+}
+form h2 {
+  margin-bottom: 8px;
+}
+input,
+select {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  transition: 0.2s;
+}
+input::placeholder {
+  color: var(--muted);
+}
+input:focus,
+select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(124, 92, 255, 0.2);
+}
+input[type="file"] {
+  color: var(--muted);
+  cursor: pointer;
+}
+
+/* ---------- Buttons ---------- */
+button {
+  background: linear-gradient(90deg, var(--accent), #9b7bff);
+  color: #fff;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: 0.2s;
+}
+button:hover {
+  filter: brightness(1.1);
+}
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ---------- Messages ---------- */
+form p {
+  color: var(--danger);
+  font-size: 0.9rem;
+}
+form p a {
+  color: var(--accent-2);
+  text-decoration: none;
+}
+form p a:hover {
+  text-decoration: underline;
+}
+
+/* ---------- Music grid ---------- */
+.music-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 18px;
+}
+.music-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  transition: 0.25s;
+}
+.music-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent);
+}
+.cover {
+  height: 140px;
+  border-radius: 10px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.6rem;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+}
+.music-card h4 {
+  font-size: 1.05rem;
+  margin-bottom: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.music-card audio {
+  width: 100%;
+  height: 40px;
+}
+
+/* ---------- Empty / status ---------- */
+.empty {
+  text-align: center;
+  color: var(--muted);
+  padding: 60px 0;
+}
+
+@media (max-width: 520px) {
+  form {
+    margin: 28px auto;
+    padding: 22px;
+  }
+}
+
+
+.delete-btn {
+  width: 100%;
+  margin-top: 12px;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--danger);
+}
+.delete-btn:hover {
+  border-color: var(--danger);
+  background: rgba(255, 92, 122, 0.1);
+}
+
+
+
+.artist-name {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: -6px 0 10px;
+}
+
+.music-card {
+  display: flex;
+  flex-direction: column;
+}
+
+
+
+
+
+
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  width: 100%;
+  max-width: 380px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+.modal h3 {
+  margin-bottom: 8px;
+}
+.modal p {
+  color: var(--muted);
+  margin-bottom: 22px;
+  font-size: 0.95rem;
+}
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+.btn-cancel {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+.btn-danger {
+  background: var(--danger);
+  color: #fff;
+}

@@ -32,6 +32,8 @@ function Upload() {
       return;
     }
 
+    let uploadedFileId = null;
+
     try {
       setLoading(true);
 
@@ -59,14 +61,24 @@ function Upload() {
         throw new Error(ikData.message || "ImageKit upload failed");
       }
 
+      uploadedFileId = ikData.fileId;
+
       // 3) Backend ko sirf title aur fileId do
       await api.post("/api/music/upload", {
         title,
-        fileId: ikData.fileId,
+        fileId: uploadedFileId,
       });
 
       navigate("/music");
     } catch (err) {
+      // File ImageKit par chali gayi lekin save fail hua, to hata do
+      if (uploadedFileId) {
+        try {
+          await api.delete(`/api/music/orphan/${uploadedFileId}`);
+        } catch (cleanupErr) {
+          console.log("cleanup failed", cleanupErr);
+        }
+      }
       setError(err.response?.data?.message || err.message || "Upload failed");
     } finally {
       setLoading(false);

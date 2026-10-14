@@ -1,6 +1,7 @@
 const albumModel = require("../models/album.model.js");
 const musicModel = require("../models/music.model.js");
 const { deleteFile, getFileDetails } = require("../services/storage.service.js");
+
 async function createMusic(req, res) {
   try {
     const { title, fileId } = req.body;
@@ -20,12 +21,19 @@ async function createMusic(req, res) {
       return res.status(400).json({ message: "invalid file" });
     }
 
-    const music = await musicModel.create({
-      uri: details.url,
-      fileId: details.fileId,
-      title,
-      artist: req.user.id,
-    });
+    let music;
+    try {
+      music = await musicModel.create({
+        uri: details.url,
+        fileId: details.fileId,
+        title,
+        artist: req.user.id,
+      });
+    } catch (dbErr) {
+      // DB save fail hua, to ImageKit se file hata do (orphan nahi rahegi)
+      await deleteFile(details.fileId).catch((e) => console.log("cleanup failed", e));
+      throw dbErr;
+    }
 
     return res.status(201).json({
       message: "music created successfully",
@@ -124,4 +132,43 @@ async function deleteMusic(req, res) {
   }
 }
 
-module.exports = { createMusic, createAlbum, getAllMusics, getAllAlbums, deleteMusic };
+async function deleteOrphanFile(req, res) {
+  try {
+    const { fileId } = req.params;
+
+    // 1) Agar kisi song se juri hai to kabhi delete nahi karni
+    const inUse = await musicModel.exists({ fileId });
+    if (inUse) {
+      return res.status(409).json({ message: "file is in use" });
+    }
+
+    // 2) ImageKit se file ki details lo
+    const details = await getFileDetails(fileId);
+
+    // 3) Sirf hamare music folder ki file
+    if (!details || !details.filePath || !details.filePath.startsWith("/backend/music/")) {
+      return res.status(400).json({ message: "invalid file" });
+    }
+
+    // 4) Sirf abhi (10 minute ke andar) upload hui file
+    const ageMs = Date.now() - new Date(details.createdAt).getTime();
+    if (Number.isNaN(ageMs) || ageMs > 10 * 60 * 1000) {
+      return res.status(400).json({ message: "file is too old to clean up" });
+    }
+
+    await deleteFile(fileId);
+    return res.status(200).json({ message: "orphan file deleted" });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: "server error" });
+  }
+}
+
+module.exports = {
+  createMusic,
+  createAlbum,
+  getAllMusics,
+  getAllAlbums,
+  deleteMusic,
+  deleteOrphanFile,
+};

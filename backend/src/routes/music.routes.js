@@ -1,5 +1,6 @@
 const express = require("express");
 const musicController = require("../controllers/music.controller.js");
+const generateController = require("../controllers/generate.controller.js");
 const authMiddleware = require("../middlewares/auth.middleware.js");
 const storageService = require("../services/storage.service.js");
 
@@ -16,6 +17,8 @@ router.get("/imagekit-auth", authMiddleware.authArtist, (req, res) => {
     res.status(500).json({ message: "Could not create upload signature" });
   }
 });
+
+router.post("/generate", authMiddleware.authUser, generateController.generateMusic);
 
 router.post("/album", authMiddleware.authArtist, musicController.createAlbum);
 

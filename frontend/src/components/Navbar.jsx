@@ -30,6 +30,7 @@ function Navbar() {
     <nav>
       <span className="brand">🎵 Musify</span>
       <NavLink to="/music">Music</NavLink>
+      <NavLink to="/generate">Generate</NavLink>
       {role === "artist" && <NavLink to="/upload">Upload</NavLink>}
       <button onClick={handleLogout}>Logout</button>
     </nav>

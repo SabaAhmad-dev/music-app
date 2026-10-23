@@ -79,6 +79,11 @@ function Music() {
             <div className="cover">🎧</div>
             <h4>{m.title}</h4>
             <p className="artist-name">{m.artist?.username}</p>
+            {m.source === "ai" && (
+              <span className="ai-badge">
+                ✨ AI{m.genre ? ` · ${m.genre}` : ""}
+              </span>
+            )}
             <audio
               controls
               src={m.uri}

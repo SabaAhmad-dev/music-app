@@ -3,14 +3,15 @@ const RETRY_STATUS = [429, 500, 502, 503, 504];
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-function buildInstruction(genre) {
+function buildInstruction(genre, language) {
   return `You are a professional songwriter.
-Write original song lyrics in English for the topic the user gives.
+Write original song lyrics in ${language} for the topic the user gives.
 Rules:
+- Write the lyrics entirely in ${language}, using the normal native script of ${language}. Do not mix in English words, and do not use transliteration.
 - Stay strictly on the user's topic.
 - Genre: ${genre}.
 - Clean and family-friendly: no profanity, no drugs, no violence, no hate, no sexual content.
-- Use section tags on their own lines, for example [Verse 1], [Chorus], [Verse 2], [Chorus], [Bridge], [Chorus].
+- Use section tags on their own lines, written in English exactly like this: [Verse 1], [Chorus], [Verse 2], [Chorus], [Bridge], [Chorus]. Only the tags stay in English, all other lines are in ${language}.
 - Write 20 to 32 lines in total.
 - Output ONLY the lyrics. No title, no explanation, no markdown.`;
 }
@@ -48,7 +49,7 @@ async function callGemini(model, key, instruction, prompt) {
   return text.slice(0, 3000);
 }
 
-async function writeLyrics({ prompt, genre }) {
+async function writeLyrics({ prompt, genre, language = "English" }) {
   const key = process.env.GEMINI_API_KEY;
   if (!key) throw new Error("GEMINI_API_KEY is missing");
 
@@ -57,7 +58,7 @@ async function writeLyrics({ prompt, genre }) {
     process.env.GEMINI_FALLBACK_MODEL,
   ].filter(Boolean);
 
-  const instruction = buildInstruction(genre);
+  const instruction = buildInstruction(genre, language);
   let lastError;
 
   for (const model of models) {

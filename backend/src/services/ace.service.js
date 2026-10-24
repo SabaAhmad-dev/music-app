@@ -15,16 +15,71 @@ const GENRES = {
 
 const GENRE_KEYS = Object.keys(GENRES);
 
+const LANGUAGES = {
+  ar: "Arabic",
+  az: "Azerbaijani",
+  bg: "Bulgarian",
+  bn: "Bengali",
+  ca: "Catalan",
+  cs: "Czech",
+  da: "Danish",
+  de: "German",
+  el: "Greek",
+  en: "English",
+  es: "Spanish",
+  fa: "Persian",
+  fi: "Finnish",
+  fr: "French",
+  he: "Hebrew",
+  hi: "Hindi",
+  hr: "Croatian",
+  ht: "Haitian Creole",
+  hu: "Hungarian",
+  id: "Indonesian",
+  is: "Icelandic",
+  it: "Italian",
+  ja: "Japanese",
+  ko: "Korean",
+  la: "Latin",
+  lt: "Lithuanian",
+  ms: "Malay",
+  ne: "Nepali",
+  nl: "Dutch",
+  no: "Norwegian",
+  pa: "Punjabi",
+  pl: "Polish",
+  pt: "Portuguese",
+  ro: "Romanian",
+  ru: "Russian",
+  sa: "Sanskrit",
+  sk: "Slovak",
+  sr: "Serbian",
+  sv: "Swedish",
+  sw: "Swahili",
+  ta: "Tamil",
+  te: "Telugu",
+  th: "Thai",
+  tl: "Tagalog",
+  tr: "Turkish",
+  uk: "Ukrainian",
+  ur: "Urdu",
+  vi: "Vietnamese",
+  yue: "Cantonese",
+  zh: "Chinese",
+};
+
 function buildRequest({ prompt, genre, lyrics, instrumental, language }) {
   const cleanLyrics = (lyrics || "").trim();
-  const style = `${GENRES[genre]}. Song topic: ${prompt}.`;
+  const langCode = language || "en";
+  const langName = LANGUAGES[langCode];
+  const style = `${GENRES[genre]}. Song topic: ${prompt}. Vocals sung in ${langName}.`;
 
   const body = {
     messages: [{ role: "user", content: style }],
     stream: true,
     batch_size: 1,
     audio_config: {
-      vocal_language: language || "en",
+      vocal_language: langCode,
       instrumental: Boolean(instrumental),
       format: "mp3",
     },
@@ -51,6 +106,9 @@ async function generateSong(options) {
   const key = process.env.ACE_MUSIC_API_KEY;
   if (!key) throw new Error("ACE_MUSIC_API_KEY is missing");
   if (!GENRES[options.genre]) throw new Error("invalid genre");
+  if (options.language && !LANGUAGES[options.language]) {
+    throw new Error("invalid language");
+  }
   if (!options.prompt || !options.prompt.trim()) {
     throw new Error("prompt is required");
   }
@@ -129,4 +187,4 @@ async function generateSong(options) {
   };
 }
 
-module.exports = { generateSong, GENRE_KEYS };
+module.exports = { generateSong, GENRE_KEYS, LANGUAGES };

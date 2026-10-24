@@ -1,6 +1,10 @@
 const musicModel = require("../models/music.model.js");
 const { uploadFile, deleteFile } = require("../services/storage.service.js");
-const { generateSong, GENRE_KEYS } = require("../services/ace.service.js");
+const {
+  generateSong,
+  GENRE_KEYS,
+  LANGUAGES,
+} = require("../services/ace.service.js");
 const { writeLyrics } = require("../services/lyrics.service.js");
 
 const MAX_PER_HOUR = Number(process.env.AI_SONGS_PER_HOUR) || 10;
@@ -14,6 +18,7 @@ async function generateMusic(req, res) {
     const prompt = String(req.body.prompt || "").trim();
     const genre = String(req.body.genre || "").trim();
     const lyrics = String(req.body.lyrics || "").trim();
+    const language = String(req.body.language || "en").trim();
     const title = String(req.body.title || "").trim() || prompt.slice(0, 40);
 
     if (prompt.length < 3 || prompt.length > 300) {
@@ -24,6 +29,10 @@ async function generateMusic(req, res) {
 
     if (!GENRE_KEYS.includes(genre)) {
       return res.status(400).json({ message: "invalid genre" });
+    }
+
+    if (!Object.prototype.hasOwnProperty.call(LANGUAGES, language)) {
+      return res.status(400).json({ message: "invalid language" });
     }
 
     if (lyrics.length > 3000) {
@@ -56,11 +65,18 @@ async function generateMusic(req, res) {
     inProgress.add(userId);
     locked = true;
 
-    // Lyrics: user ke diye hue, warna Gemini likhega
-    const finalLyrics = lyrics || (await writeLyrics({ prompt, genre }));
+    // Lyrics: user ke diye hue, warna Gemini likhega (chuni hui language mein)
+    const finalLyrics =
+      lyrics ||
+      (await writeLyrics({ prompt, genre, language: LANGUAGES[language] }));
 
     // Gaana banao
-    const song = await generateSong({ prompt, genre, lyrics: finalLyrics });
+    const song = await generateSong({
+      prompt,
+      genre,
+      lyrics: finalLyrics,
+      language,
+    });
 
     // ImageKit par upload karo
     const uploaded = await uploadFile(song.audioBase64);

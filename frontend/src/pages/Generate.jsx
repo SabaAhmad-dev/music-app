@@ -16,9 +16,64 @@ const GENRES = [
   { value: "qawwali", label: "Qawwali / Sufi" },
 ];
 
+// Code backend ki list se bilkul same hone chahiye
+const LANGUAGES = [
+  { value: "ur", label: "Urdu" },
+  { value: "en", label: "English" },
+  { value: "hi", label: "Hindi" },
+  { value: "pa", label: "Punjabi" },
+  { value: "ar", label: "Arabic" },
+  { value: "az", label: "Azerbaijani" },
+  { value: "bn", label: "Bengali" },
+  { value: "bg", label: "Bulgarian" },
+  { value: "ca", label: "Catalan" },
+  { value: "zh", label: "Chinese" },
+  { value: "hr", label: "Croatian" },
+  { value: "cs", label: "Czech" },
+  { value: "da", label: "Danish" },
+  { value: "nl", label: "Dutch" },
+  { value: "fi", label: "Finnish" },
+  { value: "fr", label: "French" },
+  { value: "de", label: "German" },
+  { value: "el", label: "Greek" },
+  { value: "ht", label: "Haitian Creole" },
+  { value: "he", label: "Hebrew" },
+  { value: "hu", label: "Hungarian" },
+  { value: "is", label: "Icelandic" },
+  { value: "id", label: "Indonesian" },
+  { value: "it", label: "Italian" },
+  { value: "ja", label: "Japanese" },
+  { value: "ko", label: "Korean" },
+  { value: "la", label: "Latin" },
+  { value: "lt", label: "Lithuanian" },
+  { value: "ms", label: "Malay" },
+  { value: "ne", label: "Nepali" },
+  { value: "no", label: "Norwegian" },
+  { value: "fa", label: "Persian" },
+  { value: "pl", label: "Polish" },
+  { value: "pt", label: "Portuguese" },
+  { value: "ro", label: "Romanian" },
+  { value: "ru", label: "Russian" },
+  { value: "sa", label: "Sanskrit" },
+  { value: "sr", label: "Serbian" },
+  { value: "sk", label: "Slovak" },
+  { value: "es", label: "Spanish" },
+  { value: "sw", label: "Swahili" },
+  { value: "sv", label: "Swedish" },
+  { value: "tl", label: "Tagalog" },
+  { value: "ta", label: "Tamil" },
+  { value: "te", label: "Telugu" },
+  { value: "th", label: "Thai" },
+  { value: "tr", label: "Turkish" },
+  { value: "uk", label: "Ukrainian" },
+  { value: "vi", label: "Vietnamese" },
+  { value: "yue", label: "Cantonese" },
+];
+
 function Generate() {
   const [prompt, setPrompt] = useState("");
   const [genre, setGenre] = useState("pop");
+  const [language, setLanguage] = useState("ur");
   const [title, setTitle] = useState("");
   const [lyrics, setLyrics] = useState("");
   const [error, setError] = useState("");
@@ -67,6 +122,7 @@ function Generate() {
         {
           prompt: cleanPrompt,
           genre,
+          language,
           title: cleanTitle,
           lyrics: cleanLyrics,
         },
@@ -145,8 +201,20 @@ function Generate() {
             ))}
           </select>
 
+          <label className="generate-label">Language</label>
+          <select
+            value={language}
+            onChange={(e) => setLanguage(e.target.value)}
+          >
+            {LANGUAGES.map((l) => (
+              <option key={l.value} value={l.value}>
+                {l.label}
+              </option>
+            ))}
+          </select>
+
           <textarea
-            placeholder="Your own lyrics (optional). Leave empty and AI will write them."
+            placeholder="Your own lyrics (optional). Leave empty and AI will write them in the chosen language."
             value={lyrics}
             onChange={(e) => setLyrics(e.target.value)}
             rows={6}
